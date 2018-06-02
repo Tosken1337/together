@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:sec="http://www.springframework.org/security/tags">
+<f:view contentType="text/html">
+
+    <h:head>
+        <title>Docker UI</title>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+        <!--<link rel="shortcut icon" type="image/x-icon" href="#{resource['favicon/favicon.ico']}"/>
+        <link rel="shortcut icon" type="image/x-icon" href="#{resource['favicon/favicon-16x16.png']}" sizes="16x16"/>
+        <link rel="shortcut icon" type="image/x-icon" href="#{resource['favicon/favicon-32x32.png']}" sizes="32x32"/>
+        <link rel="shortcut icon" type="image/x-icon" href="#{resource['favicon/favicon-96x96.png']}" sizes="96x96"/>-->
+        <link rel="stylesheet" type="text/css" href="/css/style.css" />
+        <meta name="mobile-web-app-capable" content="yes"/>
+    </h:head>
+
+
+    <h:body>
+        <div align="center">
+            <h2><p:link href="index.xhtml"><b>Docker</b>UI</p:link></h2>
+        </div>
+            <b:container>
+                <b:row>
+                    <b:column span="6" offset="3">
+                        <b:panel span="4" look="primary" collapsible="false" rendered="#{sec:areAllGranted('ROLE_USER')}">
+                            <b:alert severity="info" title="Already logged in">Logout before you can login with another user.</b:alert>
+                        </b:panel>
+
+                        <b:panel look="primary" collapsible="false" rendered="#{sec:isAnonymous()}">
+                            <h:form action="login.xhtml" method="POST" rendered="#{sec:isAnonymous()}">
+                            <input type="hidden"
+                                   name="${_csrf.parameterName}"
+                                   value="${_csrf.token}"/>
+                            <b:row>
+                                <b:column span="4">
+                                    <h:outputText value="Username:" for="username" />
+                                </b:column>
+                                <b:column span="8">
+                                    <b:inputText id="username" name="username">
+                                        <f:facet name="prepend">
+                                            <b:icon name="user" />
+                                        </f:facet>
+                                    </b:inputText>
+                                </b:column>
+                            </b:row>
+                            <b:row>
+                                <b:column span="4">
+                                    <h:outputText value="Password:" />
+                                </b:column>
+                                <b:column span="8">
+                                    <b:inputSecret id="password" name="password">
+                                        <f:facet name="prepend">
+                                            <b:iconAwesome name="key" />
+                                        </f:facet>
+                                    </b:inputSecret>
+                                </b:column>
+                            </b:row>
+                            <b:row>
+                                <b:column span="4" offset="4"  >
+                                    <b:selectBooleanCheckbox a:name="remember-me" caption="Remember me"/>
+                                </b:column>
+                            </b:row>
+                            <b:row>
+                                <b:column span="4" offset="4"  >
+                                    <b:commandButton value="login" type="submit" look="primary" />
+                                </b:column>
+                            </b:row>
+                            </h:form>
+                        </b:panel>
+                    </b:column>
+                </b:row>
+            </b:container>
+    </h:body>
+</f:view>
+</html>

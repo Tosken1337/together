@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:sec="http://www.springframework.org/security/tags"
+>
+<h:body>
+
+    <ui:composition template="/template/commonLayout.xhtml">
+
+        <ui:define name="content">
+            <h2>Create your Together</h2>
+
+            <b:row styleClass="light-content" rendered="#{param['createdRef'] != null}">
+                <div>Togehter sucessfully created</div>
+                <div>Send your friends the following link to access your Together <b:link href="" value="#{param['createdRef']}" /></div>
+            </b:row>
+
+            <b:form rendered="#{param['createdRef'] == null}">
+                <b:growl globalOnly="true" placementFrom="top"
+                         show-detail="true" allowDismiss="false"
+                         delay="8000" escape="true" />
+                <b:growl for="title" placementFrom="top"
+                         show-detail="true" allowDismiss="false"
+                         delay="8000" escape="true" />
+                <b:row styleClass="light-content">
+                    <b:row>
+                        <b:inputText id="title" label="Title" value="#{createTogether.title}" span="6" placeholder="Name your Together (e.g. Peters Party)" required="true" requiredMessage="Enter a title" />
+                    </b:row>
+                    <b:row>
+                        <b:selectBooleanCheckbox label="Can the list be extended?" value="#{createTogether.extendable}" span="6" />
+                    </b:row>
+                    <b:row>
+                        <b:dateTimePicker required="true" value="#{createTogether.expireDate}" label="Chance to list until" showIcon="true" showDate="true" showTime="true" useCurrent="true" span="6"/>
+                    </b:row>
+                    <b:row>
+                        <b:dataTable info="false" span="6" value="#{createTogether.items}" var="togetherItem" paginated="false" pageLengthMenu="false" searching="false">
+                            <b:dataTableColumn>
+                                <f:facet name="header">What is needed</f:facet>
+                                <b:inputText style="display:block;width:500px" value="#{togetherItem.title}" placeholder="Beer for example..."/>
+                                <f:facet name="footer">
+                                    <b:commandButton size="sm" icon="plus" value="Add Row" ajax="true" update="@form" action="#{createTogether.addRow}" />
+                                </f:facet>
+                            </b:dataTableColumn >
+                        </b:dataTable>
+                    </b:row>
+                    <b:row>
+                        <b:commandButton look="success" style="width:100px;margin:20px;" ajax="true" action="#{createTogether.save}" value="Create" update="@form" />
+                    </b:row>
+                </b:row>
+            </b:form>
+        </ui:define>
+
+    </ui:composition>
+
+</h:body>
+
+</html>
