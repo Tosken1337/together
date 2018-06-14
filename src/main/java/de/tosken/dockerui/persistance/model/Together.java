@@ -31,7 +31,11 @@ public class Together {
     @Temporal(TemporalType.TIMESTAMP)
     private Date expires;
 
-    @ManyToOne
+    @Column
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date created;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "creator_id")
     private User creator;
 
@@ -101,6 +105,14 @@ public class Together {
 
     public void setExtendable(boolean extendable) {
         this.extendable = extendable;
+    }
+
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
     }
 
     @Override

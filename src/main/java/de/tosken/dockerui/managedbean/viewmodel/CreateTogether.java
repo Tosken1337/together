@@ -1,7 +1,6 @@
 package de.tosken.dockerui.managedbean.viewmodel;
 
 import com.google.common.base.Strings;
-import de.tosken.dockerui.auth.AuthenticatedUser;
 import de.tosken.dockerui.managedbean.user.UserBean;
 import de.tosken.dockerui.persistance.model.Together;
 import de.tosken.dockerui.persistance.model.TogetherItem;
@@ -18,9 +17,9 @@ import javax.inject.Named;
 import javax.validation.constraints.Future;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -52,7 +51,8 @@ public class CreateTogether {
     @PostConstruct
     public void init() {
         items = IntStream.range(1, 8).mapToObj(value -> new TogetherItem()).collect(Collectors.toList());
-        expireDate = Date.from(LocalDateTime.now().plusDays(4).atZone(ZoneId.systemDefault()).toInstant());
+        extendable = true;
+        expireDate = Date.from(LocalDateTime.now().plusDays(4).truncatedTo(ChronoUnit.HOURS).atZone(ZoneId.systemDefault()).toInstant());
     }
 
     public List<TogetherItem> getItems() {
@@ -84,8 +84,7 @@ public class CreateTogether {
     }
 
     private Together saveTogether() {
-        final Optional<AuthenticatedUser> currentUser = userBean.getCurrentUser();
-        final User user = (User) currentUser.get().getDetails();
+        final User user = userBean.getCurrentUserModel();
 
         final Together together = new Together();
         together.setRef(TogetherUtils.generateRef());
@@ -93,7 +92,6 @@ public class CreateTogether {
         together.setTitle(getTitle());
         together.setExtendable(getExtendable());
         together.setCreator(user);
-
 
         getItems().stream()
                 .filter(item -> !Strings.isNullOrEmpty(item.getTitle()))

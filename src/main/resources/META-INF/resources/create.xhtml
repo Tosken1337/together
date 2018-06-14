@@ -12,16 +12,21 @@
 <h:body>
 
     <ui:composition template="/template/commonLayout.xhtml">
+        <!--pass a parameter to the outer template-->
+        <ui:param name = "title" value = "Create your Together" />
 
         <ui:define name="content">
-            <h2>Create your Together</h2>
-
             <b:row styleClass="light-content" rendered="#{param['createdRef'] != null}">
-                <div>Togehter sucessfully created</div>
-                <div>Send your friends the following link to access your Together <b:link href="" value="#{param['createdRef']}" /></div>
+                <ui:param name="togetherUri" value="#{request.contextPath}/together.xhtml?together=#{param['createdRef']}" />
+                <h3>Togehter sucessfully created</h3>
+                <p>
+                    Send your friends the following link to access your Together
+                    <b:link includeViewParams="true" href="#{togetherUri}" value="#{togetherUri}" />
+                </p>
             </b:row>
 
             <b:form rendered="#{param['createdRef'] == null}">
+                <h2>Create your Together</h2>
                 <b:growl globalOnly="true" placementFrom="top"
                          show-detail="true" allowDismiss="false"
                          delay="8000" escape="true" />

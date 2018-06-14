@@ -1,5 +1,7 @@
 package de.tosken.dockerui.persistance.model;
 
+import com.google.common.base.Objects;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -24,7 +26,7 @@ public class User {
     @Column(name = "username")
     private String username;
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     private String eMail;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -81,5 +83,28 @@ public class User {
 
     public void setTogethers(Set<Together> togethers) {
         this.togethers = togethers;
+    }
+
+    public void addRole(final Role role) {
+        roles.add(role);
+        role.getUsers().add(this);
+    }
+
+    public void removeRole(final Role role) {
+        roles.remove(role);
+        role.getUsers().remove(this);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equal(eMail, user.eMail);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(eMail);
     }
 }

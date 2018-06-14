@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:sec="http://www.springframework.org/security/tags"
+>
+
+<f:metadata>
+    <f:viewParam name="together" value="#{viewTogether.togetherRef}" />
+    <f:viewAction action="#{viewTogether.onInit}" />
+</f:metadata>
+
+<h:body>
+
+    <ui:composition template="/template/commonLayout.xhtml">
+        <!--pass a parameter to the outer template-->
+        <ui:param name = "title" value = "Do it Together!" />
+
+        <ui:define name="content">
+            <h2>Do it Together!</h2>
+
+            <c:choose>
+                <c:when test="#{viewTogether.validRef}">
+                    <b:row styleClass="light-content" >
+                        <h3>#{viewTogether.together.title}</h3>
+                    </b:row>
+                </c:when>
+                <c:otherwise>
+                    <b:row styleClass="light-content" >
+                        <div>Togehter not valid</div>
+                    </b:row>
+                </c:otherwise>
+            </c:choose>
+        </ui:define>
+
+    </ui:composition>
+
+</h:body>
+
+</html>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:sec="http://www.springframework.org/security/tags"
+>
+
+<h:body>
+
+    <ui:composition template="/template/commonLayout.xhtml">
+
+        <ui:define name="content">
+            <h2>My Together's</h2>
+            <b:row styleClass="light-content" >
+                <h:form id="togetherForm">
+                    <b:dataTable value="#{myTogethers.togetherList}" var="together" pageLength="50" >
+                        <b:dataTableColumn value="#{together.title}" />
+                        <b:dataTableColumn label="Created" dataOrder="#{together.created}">
+                            <h:outputText value="#{together.created}">
+                                <f:convertDateTime pattern="dd.MM.yyyy" />
+                            </h:outputText>
+                        </b:dataTableColumn>
+                        <b:dataTableColumn label="Expires">
+                            <h:outputText value="#{together.expires}">
+                                <f:convertDateTime pattern="dd.MM.yyyy" />
+                            </h:outputText>
+                        </b:dataTableColumn>
+                        <b:dataTableColumn label="Actions">
+                            <b:panelGrid columns="2" style="text-align: center">
+                                <b:commandButton ajax="true" update="@form" iconAwesome="trash-o" tooltip="Delete" styleClass="icon-only" action="#{myTogethers.delete(together)}" />
+                                <b:commandButton iconAwesome="share-square-o" tooltip="Open" styleClass="icon-only" action="#{myTogethers.open(together)}"/>
+                            </b:panelGrid>
+                        </b:dataTableColumn>
+                    </b:dataTable>
+                </h:form>
+            </b:row>
+        </ui:define>
+
+    </ui:composition>
+
+</h:body>
+
+</html>

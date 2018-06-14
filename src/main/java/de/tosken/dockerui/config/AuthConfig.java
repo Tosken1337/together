@@ -51,6 +51,7 @@ public class AuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/login*").permitAll()
                 .antMatchers("/").permitAll()
                 .antMatchers("/index.xhtml").permitAll()
+                .antMatchers("/register.xhtml").permitAll()
                 .antMatchers("/js/**").permitAll()
                 .antMatchers("/css/**").permitAll()
                 .antMatchers("/javax.faces.resource/**").permitAll()

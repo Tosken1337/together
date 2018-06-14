@@ -11,4 +11,5 @@ import de.tosken.dockerui.persistance.model.User;
 public interface UserService {
     User findByUsername(final String username);
     User findByEmail(final String email);
+    User registerNewUser(final String username, final String email, final String password);
 }

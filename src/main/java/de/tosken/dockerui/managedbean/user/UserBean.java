@@ -1,6 +1,7 @@
 package de.tosken.dockerui.managedbean.user;
 
 import de.tosken.dockerui.auth.AuthenticatedUser;
+import de.tosken.dockerui.persistance.model.User;
 import org.springframework.security.authentication.RememberMeAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -37,5 +38,9 @@ public class UserBean implements Serializable {
         } else {
             return Optional.empty();
         }
+    }
+
+    public User getCurrentUserModel() {
+        return ((User) getCurrentUser().get().getDetails());
     }
 }

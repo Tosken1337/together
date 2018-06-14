@@ -25,7 +25,7 @@ public class TogetherItem {
     @JoinColumn(name="together_id")
     private Together together;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "creator_id")
     private User creator;
 
