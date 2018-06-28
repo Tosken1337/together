@@ -2,6 +2,7 @@ package de.tosken.dockerui.persistance.repository;
 
 import de.tosken.dockerui.persistance.model.Together;
 import de.tosken.dockerui.persistance.model.User;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -15,6 +16,7 @@ import java.util.List;
  */
 @Repository
 public interface TogetherRepository extends JpaRepository<Together, Integer> {
+    @EntityGraph(value = "together.with.items", type = EntityGraph.EntityGraphType.LOAD)
     Together findByRef(final String ref);
     List<Together> findByCreatorOrderById(final User user);
 }

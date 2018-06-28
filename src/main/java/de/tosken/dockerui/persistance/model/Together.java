@@ -15,6 +15,12 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "together")
+@NamedEntityGraphs({
+        @NamedEntityGraph(
+                name = "together.with.items",
+                attributeNodes = @NamedAttributeNode(value = "items")
+        )
+})
 public class Together {
     @Id
     @GeneratedValue
@@ -35,7 +41,7 @@ public class Together {
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "creator_id")
     private User creator;
 
@@ -44,6 +50,10 @@ public class Together {
 
     @Column
     private boolean extendable;
+
+    @Column
+    @Version
+    private int version;
 
     public void addItem(final TogetherItem item) {
         if (items == null)
@@ -115,6 +125,14 @@ public class Together {
         this.created = created;
     }
 
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -128,3 +146,5 @@ public class Together {
         return Objects.hashCode(ref);
     }
 }
+
+

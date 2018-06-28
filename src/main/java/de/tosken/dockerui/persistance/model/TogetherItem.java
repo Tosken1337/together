@@ -29,9 +29,21 @@ public class TogetherItem {
     @JoinColumn(name = "creator_id")
     private User creator;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "responsible_id")
     private User responsible;
+
+    @Column
+    @Version
+    private int version;
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
+    }
 
     public String getTitle() {
         return title;
@@ -63,6 +75,10 @@ public class TogetherItem {
 
     public void setResponsible(User responsible) {
         this.responsible = responsible;
+    }
+
+    public boolean hasResponsiblePerson() {
+        return responsible != null;
     }
 
     @Override

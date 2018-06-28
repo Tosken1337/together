@@ -1,6 +1,7 @@
 package de.tosken.dockerui.service;
 
 import de.tosken.dockerui.persistance.model.Together;
+import de.tosken.dockerui.persistance.model.TogetherItem;
 import de.tosken.dockerui.persistance.model.User;
 
 import java.util.List;
@@ -18,4 +19,10 @@ public interface TogetherService {
     List<Together> findByUser(User user);
 
     void delete(Together together);
+
+    void enrollForItem(TogetherItem item, User user);
+
+    void enrollOutForItem(TogetherItem item, User user);
+
+    void addNewItem(Together together, User creator, String value);
 }

@@ -3,7 +3,10 @@ package de.tosken.dockerui.managedbean.viewmodel;
 import de.tosken.dockerui.managedbean.user.UserBean;
 import de.tosken.dockerui.persistance.model.User;
 import de.tosken.dockerui.service.UserService;
+import de.tosken.dockerui.validation.MatchingPassword;
 import de.tosken.dockerui.validation.ValidEmail;
+import de.tosken.dockerui.validation.group.PasswordValidationGroup;
+import de.tosken.dockerui.validation.validator.PasswordHolder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
@@ -14,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
+import javax.validation.constraints.Size;
 import java.io.IOException;
 
 /**
@@ -28,6 +32,7 @@ import java.io.IOException;
 @Log4j2
 public class RegisterBean {
     @Getter
+    @Setter
     private RegistrationForm registration;
 
     @Autowired
@@ -49,12 +54,6 @@ public class RegisterBean {
     public String onRegister() {
         System.out.println("Perform registration");
 
-        // Check if passwords are matching
-        if (!registration.getPassword().equals(registration.getMatchingPassword())) {
-            Messages.addError("registrationForm.matchingPassword", "Passwords don't not match");
-            return null;
-        }
-
         // Check if the email is already registered
         final User user = userService.findByEmail(registration.getEmail());
         if (user != null) {
@@ -74,18 +73,29 @@ public class RegisterBean {
 
     @Getter
     @Setter
-    public static class RegistrationForm {
+    @MatchingPassword(groups = PasswordValidationGroup.class)
+    public static class RegistrationForm implements PasswordHolder, Cloneable {
 
-        @Length(min = 6, max = 128)
+        @Length(min = 6, max = 64, message = "Username should have a minimum of 6 characters")
         private String username;
 
-        @ValidEmail
+        @ValidEmail(message = "Not a valid email")
         private String email;
 
-        @Length(min = 8, max = 32)
+        @Size(min = 8, max = 16, message = "Password length not between 8 and 16 characters", groups = PasswordValidationGroup.class)
         private String password;
 
-        @Length(min = 8, max = 32)
+        @Size(min = 8, max = 16, message = "Password do not match", groups = PasswordValidationGroup.class)
         private String matchingPassword;
+
+        @Override
+        public Object clone() {
+            final RegistrationForm clone = new RegistrationForm();
+            clone.setPassword(this.getPassword());
+            clone.setMatchingPassword(this.getMatchingPassword());
+            clone.setEmail(this.getEmail());
+            clone.setUsername(this.getUsername());
+            return clone;
+        }
     }
 }

@@ -43,4 +43,15 @@ public class UserBean implements Serializable {
     public User getCurrentUserModel() {
         return ((User) getCurrentUser().get().getDetails());
     }
+
+    public boolean isAuthenticated() {
+        return getCurrentUser().isPresent();
+    }
+
+    public boolean isThisMe(final User user) {
+        if (!isAuthenticated())
+            return false;
+
+        return getCurrentUserModel().equals(user);
+    }
 }

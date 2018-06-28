@@ -32,14 +32,16 @@
                     <b:column span="6" offset="3">
                         <b:panel look="primary" collapsible="false">
                             <b:row rendered="#{param.success eq '1'}">
-                                <b:alert severity="info" title="Registration successful">
-                                    You can now login here
-                                    <b:link includeViewParams="true" href="/login.xhtml" value="Login" />
-                                </b:alert>
+                                <b:column>
+                                    <b:alert severity="info" title="Registration successful">
+                                        You can now login here
+                                        <b:link includeViewParams="true" href="/login.xhtml" value="Login" />
+                                    </b:alert>
+                                </b:column>
                             </b:row>
 
                             <h:form id="registrationForm" rendered="#{sec:isAnonymous() and param.success ne '1'}">
-                                <b:messages globalOnly="true" />
+                                <b:messages />
                                 <b:row>
                                     <b:column span="4">
                                         <h:outputText value="Username:" for="username" />
@@ -62,7 +64,6 @@
                                                 <b:icon name="envelope" />
                                             </f:facet>
                                         </b:inputText>
-                                        <h:message for="email"/>
                                     </b:column>
                                 </b:row>
                                 <b:row>
@@ -74,6 +75,7 @@
                                             <f:facet name="prepend">
                                                 <b:iconAwesome name="key" />
                                             </f:facet>
+                                            <f:validateBean validationGroups="de.tosken.dockerui.validation.group.PasswordValidationGroup" />
                                         </b:inputSecret>
                                     </b:column>
                                 </b:row>
@@ -86,8 +88,8 @@
                                             <f:facet name="prepend">
                                                 <b:iconAwesome name="key" />
                                             </f:facet>
+                                            <f:validateBean validationGroups="de.tosken.dockerui.validation.group.PasswordValidationGroup" />
                                         </b:inputSecret>
-                                        <h:message for="matchingPassword"/>
                                     </b:column>
                                 </b:row>
                                 <b:row>
@@ -95,6 +97,7 @@
                                         <b:commandButton value="Register" look="primary" action="#{registerBean.onRegister}" />
                                     </b:column>
                                 </b:row>
+                                <f:validateWholeBean value="#{registerBean.registration}" rendered="#{facesContext.currentPhaseId.ordinal ne 4}" validationGroups="de.tosken.dockerui.validation.group.PasswordValidationGroup" />
                             </h:form>
                         </b:panel>
                     </b:column>
