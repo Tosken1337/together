@@ -1,6 +1,6 @@
 package de.tosken.dockerui.auth;
 
-import de.tosken.dockerui.persistance.model.User;
+import de.tosken.dockerui.persistence.model.User;
 import de.tosken.dockerui.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -19,18 +19,22 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  */
 public class AuthenticationManager implements AuthenticationProvider {
 
-    @Autowired
-    private UserService userService;
+    private final PasswordEncoder passwordEncoder;
+
+    private final UserService userService;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    public AuthenticationManager(PasswordEncoder passwordEncoder, UserService userService) {
+        this.passwordEncoder = passwordEncoder;
+        this.userService = userService;
+    }
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         final String email = ((String) authentication.getPrincipal());
         final String password = ((String) authentication.getCredentials());
 
-        final User user = userService.findByEmail(email);
+        final User user = userService.findByEMail(email);
 
         if (user == null) {
             throw new UsernameNotFoundException("User not found");

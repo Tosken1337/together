@@ -1,11 +1,11 @@
 package de.tosken.dockerui.auth;
 
-import de.tosken.dockerui.persistance.model.User;
+import de.tosken.dockerui.persistence.model.User;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -14,66 +14,45 @@ import java.util.stream.Collectors;
  * Date: 19.05.2018
  * Time: 21:04
  */
-public class AuthenticatedUser implements Authentication, UserDetails {
+public class AuthenticatedUser implements Authentication {
 
-    private User user;
+    private String username;
 
-    static AuthenticatedUser fromUser(final User user) {
-        return new AuthenticatedUser(user);
-    }
+    private String email;
 
-    private AuthenticatedUser(final User user) {
-        this.user = user;
+    private List<GrantedAuthority> authorities;
+
+    static Authentication fromUser(User user) {
+        final AuthenticatedUser u = new AuthenticatedUser();
+        u.username = user.getUsername();
+        u.email = user.getEmail();
+
+        u.authorities = user.getRoles().stream()
+                .map(role -> {
+                    return (GrantedAuthority) role::getName;
+                }).collect(Collectors.toList());
+
+        return u;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return user.getRoles().stream().map(role -> (GrantedAuthority) () -> role.getName()).collect(Collectors.toList());
-    }
-
-    @Override
-    public String getPassword() {
-        return user.getPassword();
-    }
-
-    @Override
-    public String getUsername() {
-        return user.getUsername();
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
+        return null;
     }
 
     @Override
     public Object getCredentials() {
-        return user.getPassword();
+        return "";
     }
 
     @Override
     public Object getDetails() {
-        return user;
+        return "";
     }
 
     @Override
     public Object getPrincipal() {
-        return user.getUsername();
+        return "";
     }
 
     @Override
@@ -82,10 +61,12 @@ public class AuthenticatedUser implements Authentication, UserDetails {
     }
 
     @Override
-    public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException { }
+    public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
+
+    }
 
     @Override
     public String getName() {
-        return user.getUsername();
+        return "";
     }
 }

@@ -1,13 +1,13 @@
 package de.tosken.dockerui.config;
 
-import de.tosken.dockerui.auth.RememberMeUserDetailsService;
+import de.tosken.dockerui.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -19,6 +19,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  */
 @Configuration
 public class AuthConfig extends WebSecurityConfigurerAdapter {
+
+    private final UserService userService;
+
+    @Autowired
+    public AuthConfig(UserService userService) {
+        this.userService = userService;
+    }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -32,16 +39,7 @@ public class AuthConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
-        return new de.tosken.dockerui.auth.AuthenticationManager();
-    }
-
-    /**
-     * UserDetailsService is only needed for remember me authentication.
-     * @return
-     */
-    @Bean
-    public UserDetailsService userDetailsService() {
-        return new RememberMeUserDetailsService();
+        return new de.tosken.dockerui.auth.AuthenticationManager(passwordEncoder(), userService);
     }
 
     @Override
@@ -58,9 +56,10 @@ public class AuthConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and()
                 .csrf().disable()
-                .rememberMe().key("uniqueAndSecret").and()
                 .formLogin()
                 .loginPage("/login.xhtml")
+                .usernameParameter("username")
+                .passwordParameter("password")
                 .defaultSuccessUrl("/index.xhtml")
                 .failureUrl("/login.xhtml?error")
                 .and()
